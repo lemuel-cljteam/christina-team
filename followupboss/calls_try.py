@@ -31,12 +31,20 @@ X_System = "Christina_James"
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
 # MongoDB connection
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/?ssl=true")
-db = client['Christina']
-collection = db['followupboss_calls']
+try:
+    client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?connectTimeoutMS=30000&socketTimeoutMS=30000&ssl=true")
+    print("Connected to MongoDB")
+    db = client['Christina']
+    collection = db['followupboss_calls']
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
 
 # Count initial documents
-initial_count_of_collection = collection.count_documents({})
+try:
+    initial_count_of_collection = collection.count_documents({})
+    print(f"Initial count of documents: {initial_count_of_collection}")
+except Exception as e:
+    print(f"Error counting documents: {e}")
 
 def delete_all():
     result = collection.delete_many({})
