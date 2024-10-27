@@ -6,6 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  show-ip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get IP address
+        run: |
+          curl https://api.ipify.org
+
   run-script:
     runs-on: ubuntu-latest  # You can specify other OS types if needed
 
