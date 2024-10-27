@@ -2,7 +2,7 @@ name: Daily Python Script
 
 on:
   schedule:
-    - cron: '00 14 * * *'
+    - cron: '30 14 * * *'
   workflow_dispatch:
 
 jobs:
@@ -44,6 +44,10 @@ jobs:
       - name: Run People Relationships 2 script
         run: |
           python followupboss/02_pr_to_gsheet.py
+
+      - name: Run Calls script
+        run: |
+          python followupboss/03_calls.py
 
       - name: Run People 1 script
         run: |

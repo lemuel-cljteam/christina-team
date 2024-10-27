@@ -161,7 +161,8 @@ df.columns = [
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
 
 # Authorize the client with the credentials
 client = gspread.authorize(creds)
@@ -360,7 +361,8 @@ delete_all()
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
 
 # Authorize the client with the credentials
 client = gspread.authorize(creds)
@@ -400,7 +402,8 @@ df_final = pd.concat([df_from_fub, df_app], ignore_index=True)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
 
 # Authorize the client with the credentials
 client = gspread.authorize(creds)

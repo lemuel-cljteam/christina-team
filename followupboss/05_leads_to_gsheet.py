@@ -71,7 +71,8 @@ df.drop(columns=['addresses'], inplace=True)
 df['Update Source'] = "Followup boss"
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 client = gspread.authorize(creds)
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
 data = sheet.get_all_values()
@@ -336,7 +337,8 @@ df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
 
 # Authorize the client with the credentials
 client = gspread.authorize(creds)
