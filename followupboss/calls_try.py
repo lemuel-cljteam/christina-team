@@ -33,7 +33,7 @@ encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 # MongoDB connection
 try:
     # client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?connectTimeoutMS=30000&socketTimeoutMS=30000&ssl=true")
-    client = MongoClient("mongodb+srv://username:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+    client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
     client.admin.command('ping')
     print("Connected to MongoDB")
     db = client['Christina']
