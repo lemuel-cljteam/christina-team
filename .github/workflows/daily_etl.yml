@@ -1,0 +1,34 @@
+name: Daily Python Script
+
+on:
+  schedule:
+    - cron: '30 12 * * *'  # This runs the script every day at midnight UTC
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest  # You can specify other OS types if needed
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'  # Specify the Python version
+
+      - name: Cache Python packages
+        uses: actions/cache@v2
+        with:
+            path: ~/.cache/pip
+            key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+            restore-keys: |
+                ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Python script
+        run: |
+          python 03_calls.py

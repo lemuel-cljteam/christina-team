@@ -7,12 +7,16 @@ from datetime import datetime as dt
 from pymongo import MongoClient
 from pymongoarrow.api import find_pandas_all
 import pytz
+import os
+
+working_directory = os.getcwd()
+# r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
+logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
 current_time_initial = dt.now(hoover_tz)
 current_time_ph_initial = dt.now()
-logfile = r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 
 with open(logfile, 'a') as file:
     file.write(f'\nUpdate People Gsheet Start time in USA: {current_time_initial}')

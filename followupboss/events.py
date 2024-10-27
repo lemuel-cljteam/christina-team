@@ -6,14 +6,17 @@ from tqdm import tqdm
 import pytz
 from datetime import datetime as dt
 from pymongo import MongoClient, UpdateOne
+import os
+
+working_directory = os.getcwd()
+# r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
+logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
 # Timezones
 hoover_tz = pytz.timezone('America/Chicago')
 current_time_initial = dt.now(hoover_tz)
 current_time_ph_initial = dt.now()
 
-# Logging
-logfile = r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 with open(logfile, 'a') as file:
     file.write(f'\nEvents Extract Start time in USA: {current_time_initial}')
     file.write(f'\nEvents Extract Start time in PH: {current_time_ph_initial}\n')

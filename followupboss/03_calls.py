@@ -6,12 +6,16 @@ from tqdm import tqdm
 import pytz
 from datetime import datetime as dt
 import pytz
+import os
+
+working_directory = os.getcwd()
+# r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
+logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
 current_time_initial = dt.now(hoover_tz)
 current_time_ph_initial = dt.now()
-logfile = r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 
 with open(logfile, 'a') as file:
     file.write(f'\nCalls Extract Start time in USA: {current_time_initial}')
@@ -26,7 +30,7 @@ X_System = "Christina_James"
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
 from pymongo import MongoClient
-client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/")
 db = client['Christina']
 collection = db['followupboss_calls']
 

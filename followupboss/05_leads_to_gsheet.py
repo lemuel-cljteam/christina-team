@@ -10,12 +10,16 @@ import gspread
 from google.oauth2.service_account import Credentials
 import uuid
 import numpy as np
+import os
+
+working_directory = os.getcwd()
+# r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
+logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
 current_time_initial = dt.now(hoover_tz)
 current_time_ph_initial = dt.now()
-logfile = r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 
 # Your API key
 api_key = "fka_0fEZ6mLXysLcr5c3wVKxUUnKgRTHQwftdg"
