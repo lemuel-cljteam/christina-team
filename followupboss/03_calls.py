@@ -57,22 +57,15 @@ r = requests.get(url, headers={'accept': "application/json",
                                 'X-System-Key': X_System_Key,
                                 'X-System': X_System
 })
-data = r.json()
-with open(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\calls.json', 'w') as file:
-    json.dump(data, file, indent=4)
-    
+data = r.json()   
 total = round(data['_metadata']['total'] / 100, None)
-# list_of_offsets = list(range(0, round(total, -1) + 1, 100))
-nextLink_initial = data['_metadata']['nextLink']
+nextLink = data['_metadata'].get('nextLink')
 for x in data['calls']:
     if isinstance(x, dict):
         insert_one_document(x)
 
 with tqdm(total, total=total, desc="Extracting calls", leave=True) as pbar:
     while nextLink:
-    # for i in tqdm(list_of_offsets, total=len(list_of_offsets), desc="Processing People from Followup boss", leave=True):
-        # url = f"https://api.followupboss.com/v1/calls?limit=100&offset={i}"
-
         r = requests.get(nextLink, headers={'accept': "application/json",
                                     'Authorization': "Basic " + encoded_api_key,
                                         'X-System-Key': X_System_Key,
