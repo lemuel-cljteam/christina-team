@@ -29,7 +29,7 @@ X_System = "Christina_James"
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
-client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people']
 

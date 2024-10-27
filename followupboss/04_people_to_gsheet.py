@@ -44,7 +44,7 @@ r = requests.get(url, headers={'accept': "application/json",
 data = r.json()
 total = data["_metadata"]["total"]
 
-client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people']
 

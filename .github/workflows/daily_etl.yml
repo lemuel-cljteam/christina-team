@@ -2,7 +2,7 @@ name: Daily Python Script
 
 on:
   schedule:
-    - cron: '30 12 * * *'  # This runs the script every day at midnight UTC
+    - cron: '00 14 * * *'
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
         run: |
           curl https://api.ipify.org
 
-  run-script:
+  run-scripts:
     runs-on: ubuntu-latest  # You can specify other OS types if needed
 
     steps:
@@ -37,6 +37,19 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run Python script
+      - name: Run People Relationships 1 script
         run: |
-          python followupboss/calls_try.py
+          python followupboss/01_peoplerelationships.py
+      
+      - name: Run People Relationships 2 script
+        run: |
+          python followupboss/02_pr_to_gsheet.py
+
+      - name: Run People 1 script
+        run: |
+          python followupboss/04_people_to_gsheet.py
+      
+      - name: Run People 2 script
+        run: |
+          python followupboss/05_leads_to_gsheet.py
+

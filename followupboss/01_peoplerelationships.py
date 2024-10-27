@@ -46,7 +46,7 @@ list_of_offsets = list(range(0, round(total, -1) + 1, 100))
 df_list = []
 
 from pymongo import MongoClient
-client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 

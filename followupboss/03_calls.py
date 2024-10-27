@@ -30,7 +30,7 @@ X_System = "Christina_James"
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
 from pymongo import MongoClient
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/?ssl=true")
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_calls']
 

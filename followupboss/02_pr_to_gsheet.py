@@ -26,7 +26,7 @@ with open(logfile, 'a') as file:
 #run first the peoplerelationships.py
 
 # Connect to MongoDB (adjust the connection string as needed)
-client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 

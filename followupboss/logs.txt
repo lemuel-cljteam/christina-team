@@ -1,6 +1,0 @@
-
-Calls Extract Start time in USA: 2024-10-27 07:58:45.739122-05:00
-Calls Extract Start time in PH: 2024-10-27 20:58:45.739122
-
-Calls Extract Start time in USA: 2024-10-27 08:02:05.352259-05:00
-Calls Extract Start time in PH: 2024-10-27 21:02:05.352259
