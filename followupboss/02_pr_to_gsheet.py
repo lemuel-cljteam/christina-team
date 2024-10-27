@@ -338,7 +338,8 @@ df_from_fub = df_new[[
     "Update Source"
 ]]
 
-client = MongoClient()
+# client = MongoClient()
+client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['app_people_relationships']
 
