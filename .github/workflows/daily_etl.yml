@@ -45,10 +45,6 @@ jobs:
         run: |
           python followupboss/02_pr_to_gsheet.py
 
-      - name: Run Calls script
-        run: |
-          python followupboss/03_calls.py
-
       - name: Run People 1 script
         run: |
           python followupboss/04_people_to_gsheet.py
