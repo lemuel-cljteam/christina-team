@@ -71,7 +71,7 @@ df.drop(columns=['addresses'], inplace=True)
 # Display the DataFrame
 df['Update Source'] = "Followup boss"
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds and os.path.exists(creds):
@@ -344,9 +344,6 @@ df_fub_only = df_fub_only[[
 
 df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 # df_final.drop(['index'], axis=1, inplace=True)
-
-# Define the scope (read-only access to Sheets)
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 sheet = client.open_by_key(gsheetid).worksheet("Leads")
 

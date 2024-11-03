@@ -163,7 +163,7 @@ df.columns = [
 ]
 
 # Define the scope (read-only access to Sheets)
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Load the service account credentials
 # for local testing
@@ -367,9 +367,6 @@ def count_of_all_documents():
 
 delete_all()
 
-# Define the scope (read-only access to Sheets)
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds and os.path.exists(creds):
     credentials = Credentials.from_service_account_file(creds, scopes=SCOPES)
@@ -399,9 +396,6 @@ df_app = get_all_data_as_dataframe()
 df_app = df_app[df_app['Update Source'] == "App"]
 
 df_final = pd.concat([df_from_fub, df_app], ignore_index=True)
-
-# Define the scope (read-only access to Sheets)
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key(gsheetid).worksheet("People Relationships")
