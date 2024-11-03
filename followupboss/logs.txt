@@ -1,0 +1,14 @@
+
+Update Calls Gsheet Start time in USA: 2024-10-27 16:30:50.484893-05:00
+Update Calls Gsheet Start time in PH: 2024-10-28 05:30:50.484893
+
+Total Number of documents: 0 in the collection app_calls
+Update Calls Gsheet End time in USA: 2024-10-27 16:54:13.256993-05:00
+Update Calls Gsheet End time in PH: 2024-10-28 05:54:13.256993
+
+Update Calls Gsheet Total Running time: 0:23:22.772100
+Total Number of leads: 6450 in the collection followupboss_people
+Update Leads Gsheet End time in USA: 2024-10-30 07:49:22.275865-05:00
+Update Leads Gsheet End time in PH: 2024-10-30 20:49:22.275865
+
+Update Leads Gsheet Total Running time: 0:00:28.284398

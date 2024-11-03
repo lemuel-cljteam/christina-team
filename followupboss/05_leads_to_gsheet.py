@@ -1,4 +1,4 @@
-from datetime import datetime as dt
+from datetime import datetime
 import requests
 import json
 import pandas as pd
@@ -18,8 +18,8 @@ logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
-current_time_initial = dt.now(hoover_tz)
-current_time_ph_initial = dt.now()
+current_time_initial = datetime.now(hoover_tz)
+current_time_ph_initial = datetime.now()
 
 # Your API key
 api_key = "fka_0fEZ6mLXysLcr5c3wVKxUUnKgRTHQwftdg"
@@ -71,9 +71,21 @@ df.drop(columns=['addresses'], inplace=True)
 df['Update Source'] = "Followup boss"
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
-creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-client = gspread.authorize(creds)
+# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds:
+    with open(creds) as f:
+        creds_dict = json.load(f)
+else:
+    raise ValueError("GOOGLE_CREDENTIALS is not set!")
+
+credentials = Credentials.from_service_account_info(creds_dict, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"    
+])
+
+client = gspread.authorize(credentials)
+
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
 data = sheet.get_all_values()
 df_leads = pd.DataFrame(data[1:], columns=data[0])
@@ -98,6 +110,10 @@ df_new.replace([np.inf, -np.inf, np.nan], None, inplace=True)
 df_new['Budget'] = df_new['price']
 
 df_app_only = df_leads[df_leads['Update Source'] == 'App']
+df_app_only['Year'] = df_app_only['Year'].astype('int')
+df_app_only['Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.date
+df_app_only['Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'])
+df_app_only['Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'])
 
 df_fub_only = df_new[~df_new['Lead ID'].isin(df_app_only['Lead ID'])]
 df_fub_only['Update Source'] = 'Followup boss'
@@ -105,17 +121,17 @@ df_fub_only['Update Source'] = 'Followup boss'
 # df_fub_only = df_fub_only2.copy()
 
 df_fub_only['Lead ID'] = df_fub_only['Lead ID']
-df_fub_only['Year'] = pd.to_datetime(df_fub_only['created']).dt.strftime('%Y')
+df_fub_only['Year'] = pd.to_datetime(df_fub_only['created']).dt.year
 df_fub_only['Month'] = pd.to_datetime(df_fub_only['created']).dt.strftime('%b')
 df_fub_only['Agent ID'] = df_fub_only['assignedUserId']
-df_fub_only['Date Added'] = pd.to_datetime(df_fub_only['created']).dt.strftime('%Y-%m-%d')
+df_fub_only['Date Added'] = pd.to_datetime(df_fub_only['created']).dt.date
 df_fub_only['Name'] = df_fub_only['firstName'] + ' ' + df_fub_only['lastName']
 df_fub_only['First Name'] = df_fub_only['firstName']
 df_fub_only['Last Name'] = df_fub_only['lastName']
 df_fub_only['Stage'] = df_fub_only['stage']
 df_fub_only['Lead Source'] = df_fub_only['source']
 df_fub_only['Assigned To'] = df_fub_only['assignedTo']
-df_fub_only['Last Assigned'] = df_fub_only['updated']
+df_fub_only['Last Assigned'] = pd.to_datetime(df_fub_only['updated'])
 df_fub_only['Is Contacted'] = df_fub_only['contacted']
 df_fub_only['Listing Price'] = df_fub_only['price']
 df_fub_only['Tags'] = df_fub_only['tags']
@@ -201,7 +217,7 @@ df_fub_only['Campaign Term'] = None
 df_fub_only['Campaign Content'] = None
 df_fub_only['Campaign Name'] = None
 df_fub_only['Deal Stage'] = df_fub_only['dealStage']
-df_fub_only['Deal Close Date'] = df_fub_only['dealCloseDate']
+df_fub_only['Deal Close Date'] = pd.to_datetime(df_fub_only['dealCloseDate'])
 df_fub_only['Deal Price'] = df_fub_only['dealPrice']
 df_fub_only['ID'] = df_fub_only['id']
 df_fub_only['Birthday'] = None
@@ -336,12 +352,20 @@ df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 # Define the scope (read-only access to Sheets)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-# Load the service account credentials
-creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds:
+    with open(creds) as f:
+        creds_dict = json.load(f)
+else:
+    raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-# Authorize the client with the credentials
-client = gspread.authorize(creds)
+credentials = Credentials.from_service_account_info(creds_dict, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"    
+])
+
+client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
@@ -382,8 +406,8 @@ print("Overwritten Leads")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
-current_time = dt.now(hoover_tz)
-current_time_ph = dt.now()
+current_time = datetime.now(hoover_tz)
+current_time_ph = datetime.now()
 total_running_time = current_time_ph - current_time_ph_initial
 
 with open(logfile, 'a') as file:

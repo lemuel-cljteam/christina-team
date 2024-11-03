@@ -6,19 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  show-ip:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get IP address
-        run: |
-          curl https://api.ipify.org
-
   run-scripts:
     runs-on: ubuntu-latest  # You can specify other OS types if needed
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Google Cloud credentials
+        run: |
+          echo "GOOGLE_CREDENTIALS" | base64 --decode > $HOME/gcloud.json
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+      - name: Set GOOGLE_CREDENTIALS environment variable
+        run: echo "GOOGLE_CREDENTIALS=$HOME/gcloud.json" >> $GITHUB_ENV
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,7 +34,7 @@ jobs:
             key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
             restore-keys: |
                 ${{ runner.os }}-pip-
-
+ 
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
@@ -44,10 +46,6 @@ jobs:
       - name: Run People Relationships 2 script
         run: |
           python followupboss/02_pr_to_gsheet.py
-
-      - name: Run Calls script
-        run: |
-          python followupboss/03_calls.py
 
       - name: Run People 1 script
         run: |

@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from google.cloud import storage
 import pandas as pd
 import numpy as np
 import uuid
@@ -8,6 +9,7 @@ from pymongo import MongoClient
 from pymongoarrow.api import find_pandas_all
 import pytz
 import os
+import json
 
 working_directory = os.getcwd()
 
@@ -38,9 +40,6 @@ def get_all_data_as_dataframe():
     df = pd.DataFrame(documents)
 
     return df
-
-# Example usage
-df = get_all_data_as_dataframe()
 
 # Define the fields you want to extract
 projection = {
@@ -161,11 +160,22 @@ df.columns = [
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+# for local testing
+# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds:
+    with open(creds) as f:
+        creds_dict = json.load(f)
+else:
+    raise ValueError("GOOGLE_CREDENTIALS is not set!")
+
+credentials = Credentials.from_service_account_info(creds_dict, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"    
+])
 
 # Authorize the client with the credentials
-client = gspread.authorize(creds)
+client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
@@ -362,11 +372,21 @@ delete_all()
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds:
+    with open(creds) as f:
+        creds_dict = json.load(f)
+else:
+    raise ValueError("GOOGLE_CREDENTIALS is not set!")
+
+credentials = Credentials.from_service_account_info(creds_dict, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"    
+])
 
 # Authorize the client with the credentials
-client = gspread.authorize(creds)
+client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("People Relationships")
@@ -385,15 +405,6 @@ if documents:
 else:
     print("No data to insert.")
 
-def get_all_data_as_dataframe():
-    # Retrieve all documents in the collection
-    documents = list(collection.find({}))  # Convert the cursor to a list of dictionaries
-
-    # Convert the list of dictionaries to a pandas DataFrame
-    df = pd.DataFrame(documents)
-
-    return df
-
 df_app = get_all_data_as_dataframe()
 df_app = df_app[df_app['Update Source'] == "App"]
 
@@ -403,11 +414,20 @@ df_final = pd.concat([df_from_fub, df_app], ignore_index=True)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Load the service account credentials
-creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-# creds = Credentials.from_service_account_file(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\ETLs\credentials.json', scopes=SCOPES)
+# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds:
+    with open(creds) as f:
+        creds_dict = json.load(f)
+else:
+    raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-# Authorize the client with the credentials
-client = gspread.authorize(creds)
+credentials = Credentials.from_service_account_info(creds_dict, scopes=[
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"    
+])
+
+client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("People Relationships")
