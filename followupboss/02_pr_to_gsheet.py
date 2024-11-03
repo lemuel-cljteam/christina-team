@@ -9,6 +9,7 @@ from pymongoarrow.api import find_pandas_all
 import pytz
 import os
 import json
+import base64
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
@@ -169,8 +170,8 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds:
-    with open(creds) as f:
-        creds_dict = json.load(f)
+    creds_json = base64.b64decode(creds).decode('utf-8')
+    creds_dict = json.loads(creds_json)
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
@@ -377,15 +378,12 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds:
-    with open(creds) as f:
-        creds_dict = json.load(f)
+    creds_json = base64.b64decode(creds).decode('utf-8')
+    creds_dict = json.loads(creds_json)
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-credentials = Credentials.from_service_account_info(creds_dict, scopes=[
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"    
-])
+credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
 # Authorize the client with the credentials
 client = gspread.authorize(credentials)
@@ -419,15 +417,12 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds:
-    with open(creds) as f:
-        creds_dict = json.load(f)
+    creds_json = base64.b64decode(creds).decode('utf-8')
+    creds_dict = json.loads(creds_json)
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-credentials = Credentials.from_service_account_info(creds_dict, scopes=[
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"    
-])
+credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
 client = gspread.authorize(credentials)
 

@@ -75,8 +75,8 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds:
-    with open(creds) as f:
-        creds_dict = json.load(f)
+    creds_json = base64.b64decode(creds).decode('utf-8')
+    creds_dict = json.loads(creds_json)
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
@@ -353,8 +353,8 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds:
-    with open(creds) as f:
-        creds_dict = json.load(f)
+    creds_json = base64.b64decode(creds).decode('utf-8')
+    creds_dict = json.loads(creds_json)
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
