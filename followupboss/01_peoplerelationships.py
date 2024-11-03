@@ -39,8 +39,6 @@ r = requests.get(url, headers={'accept': "application/json",
                                 'X-System': X_System
 })
 data = r.json()
-with open(r'C:\Users\ENDUSER\OneDrive\FOR CHRISTINA\Python\people_relationships.json', 'w') as file:
-    json.dump(data, file, indent=4)
     
 total = data['_metadata']['total']
 list_of_offsets = list(range(0, round(total, -1) + 1, 100))
