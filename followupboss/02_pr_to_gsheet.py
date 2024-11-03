@@ -11,6 +11,8 @@ import pytz
 import os
 import json
 
+mongopass = os.getenv("MONGODB_PASSWORD")
+
 working_directory = os.getcwd()
 
 hoover_tz = pytz.timezone('America/Chicago')
@@ -28,7 +30,7 @@ with open(logfile, 'a') as file:
 #run first the peoplerelationships.py
 
 # Connect to MongoDB (adjust the connection string as needed)
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 
@@ -349,7 +351,7 @@ df_from_fub = df_new[[
 ]]
 
 # client = MongoClient()
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['app_people_relationships']
 

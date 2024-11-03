@@ -9,19 +9,26 @@ jobs:
   run-scripts:
     runs-on: ubuntu-latest  # You can specify other OS types if needed
 
+    env:
+      FOLLOWUPBOSS_APIKEY: ${{ secrets.FOLLOWUPBOSS_APIKEY }}
+      FOLLOWUPBOSS_XSYSTEM: ${{ secrets.FOLLOWUPBOSS_XSYSTEM }}
+      FOLLOWUPBOSS_XSYSTEMKEY: ${{ secrets.FOLLOWUPBOSS_XSYSTEMKEY }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Google Cloud credentials
-        run: |
-          echo "GOOGLE_CREDENTIALS" | base64 --decode > $HOME/gcloud.json
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      
+        run: |
+          echo "GOOGLE_CREDENTIALS" | base64 --decode > $HOME/gcloud.json
+
+     
       - name: Set GOOGLE_CREDENTIALS environment variable
         run: echo "GOOGLE_CREDENTIALS=$HOME/gcloud.json" >> $GITHUB_ENV
-
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

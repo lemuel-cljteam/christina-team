@@ -12,6 +12,11 @@ import uuid
 import numpy as np
 import os
 
+api_key = "FOLLOWUPBOSS_APIKEY"
+X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
+X_System = "FOLLOWUPBOSS_XSYSTEM"
+mongopass = os.getenv("MONGODB_PASSWORD")
+
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 logfile = os.path.join(working_directory, "followupboss", "logs.txt")
@@ -24,11 +29,6 @@ current_time_ph_initial = dt.now()
 with open(logfile, 'a') as file:
     file.write(f'\nPeople Extract Start time in USA: {current_time_initial}')
     file.write(f'\nPeople Extract Start time in PH: {current_time_ph_initial}\n')
-
-# Your API key
-api_key = "fka_0fEZ6mLXysLcr5c3wVKxUUnKgRTHQwftdg"
-X_System_Key = "ad593739c6d8eb43684c90ef2d98d08f"
-X_System = "Christina_James"
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
@@ -44,7 +44,7 @@ r = requests.get(url, headers={'accept': "application/json",
 data = r.json()
 total = data["_metadata"]["total"]
 
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people']
 

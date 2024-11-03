@@ -21,15 +21,15 @@ hoover_tz = pytz.timezone('America/Chicago')
 current_time_initial = datetime.now(hoover_tz)
 current_time_ph_initial = datetime.now()
 
-# Your API key
-api_key = "fka_0fEZ6mLXysLcr5c3wVKxUUnKgRTHQwftdg"
-X_System_Key = "ad593739c6d8eb43684c90ef2d98d08f"
-X_System = "Christina_James"
+api_key = "FOLLOWUPBOSS_APIKEY"
+X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
+X_System = "FOLLOWUPBOSS_XSYSTEM"
+mongopass = os.getenv("MONGODB_PASSWORD")
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
-client = MongoClient("mongodb+srv://christina:akodcXC3gIB2qhYf@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(F"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
 db = client['Christina']
 collection = db['followupboss_people']
 
