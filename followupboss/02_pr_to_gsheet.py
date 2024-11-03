@@ -169,14 +169,11 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # for local testing
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
-decoded_bytes = base64.b64decode(creds)
+if creds and os.path.exists(creds):
+    credentials = Credentials.from_service_account_file(creds, scopes=SCOPES)
+else:
+    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS is not set or file does not exist!")
 
-# Convert bytes to string and then load it as JSON
-creds_dict = json.loads(decoded_bytes.decode('utf-8'))
-
-credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
-
-# Authorize the client with the credentials
 client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
