@@ -80,10 +80,7 @@ if creds:
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-credentials = Credentials.from_service_account_info(creds_dict, scopes=[
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"    
-])
+credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
 client = gspread.authorize(credentials)
 
@@ -361,10 +358,7 @@ if creds:
 else:
     raise ValueError("GOOGLE_CREDENTIALS is not set!")
 
-credentials = Credentials.from_service_account_info(creds_dict, scopes=[
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"    
-])
+credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
 client = gspread.authorize(credentials)
 
