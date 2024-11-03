@@ -38,7 +38,7 @@ r = requests.get(url, headers={'accept': "application/json",
                                 'X-System': X_System
 })
 data = r.json()
-print(data)
+
 total = data['_metadata']['total']
 list_of_offsets = list(range(0, round(total, -1) + 1, 100))
 
