@@ -20,12 +20,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Google Cloud credentials
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: |
           echo "GOOGLE_CREDENTIALS" | base64 --decode > $HOME/gcloud.json
-
-     
+        env:
+              GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
       - name: Set GOOGLE_CREDENTIALS environment variable
         run: echo "GOOGLE_CREDENTIALS=$HOME/gcloud.json" >> $GITHUB_ENV
       
