@@ -14,6 +14,7 @@ jobs:
       FOLLOWUPBOSS_XSYSTEM: ${{ secrets.FOLLOWUPBOSS_XSYSTEM }}
       FOLLOWUPBOSS_XSYSTEMKEY: ${{ secrets.FOLLOWUPBOSS_XSYSTEMKEY }}
       MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      GSHEET_ID: ${{ secrets.GSHEET_ID }}
 
     steps:
       - name: Checkout code
