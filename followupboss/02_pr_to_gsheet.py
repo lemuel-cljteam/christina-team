@@ -370,22 +370,8 @@ delete_all()
 # Define the scope (read-only access to Sheets)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# Load the service account credentials
-# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-creds = os.getenv("GOOGLE_CREDENTIALS")
-if creds:
-    creds_json = base64.b64decode(creds).decode('utf-8')
-    creds_dict = json.loads(creds_json)
-else:
-    raise ValueError("GOOGLE_CREDENTIALS is not set!")
-
-credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
-
-# Authorize the client with the credentials
-client = gspread.authorize(credentials)
-
 # Open the Google Sheet by name or by URL
-sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("People Relationships")
+sheet = client.open_by_key(gsheetid).worksheet("People Relationships")
 
 # Get all data in the sheet
 data = sheet.get_all_values()
@@ -409,21 +395,8 @@ df_final = pd.concat([df_from_fub, df_app], ignore_index=True)
 # Define the scope (read-only access to Sheets)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-# Load the service account credentials
-# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-creds = os.getenv("GOOGLE_CREDENTIALS")
-if creds:
-    creds_json = base64.b64decode(creds).decode('utf-8')
-    creds_dict = json.loads(creds_json)
-else:
-    raise ValueError("GOOGLE_CREDENTIALS is not set!")
-
-credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
-
-client = gspread.authorize(credentials)
-
 # Open the Google Sheet by name or by URL
-sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("People Relationships")
+sheet = client.open_by_key(gsheetid).worksheet("People Relationships")
 
 sheet.clear()
 

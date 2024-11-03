@@ -348,19 +348,6 @@ df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 # Define the scope (read-only access to Sheets)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-creds = os.getenv("GOOGLE_CREDENTIALS")
-if creds:
-    creds_json = base64.b64decode(creds).decode('utf-8')
-    creds_dict = json.loads(creds_json)
-else:
-    raise ValueError("GOOGLE_CREDENTIALS is not set!")
-
-credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
-
-client = gspread.authorize(credentials)
-
-# Open the Google Sheet by name or by URL
 sheet = client.open_by_key(gsheetid).worksheet("Leads")
 
 sheet.clear()
