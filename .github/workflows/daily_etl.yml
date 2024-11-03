@@ -46,9 +46,9 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # - name: Run People Relationships 1 script
-      #   run: |
-      #     python followupboss/01_peoplerelationships.py
+      - name: Run People Relationships 1 script
+        run: |
+          python followupboss/01_peoplerelationships.py
       
       - name: Run People Relationships 2 script
         run: |

@@ -370,6 +370,14 @@ delete_all()
 # Define the scope (read-only access to Sheets)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
+creds = os.getenv("GOOGLE_CREDENTIALS")
+if creds and os.path.exists(creds):
+    credentials = Credentials.from_service_account_file(creds, scopes=SCOPES)
+else:
+    raise ValueError("GOOGLE_APPLICATION_CREDENTIALS is not set or file does not exist!")
+
+client = gspread.authorize(credentials)
+
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key(gsheetid).worksheet("People Relationships")
 
