@@ -74,11 +74,10 @@ df['Update Source'] = "Followup boss"
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
-if creds:
-    creds_json = base64.b64decode(creds).decode('utf-8')
-    creds_dict = json.loads(creds_json)
-else:
-    raise ValueError("GOOGLE_CREDENTIALS is not set!")
+decoded_bytes = base64.b64decode(creds)
+
+# Convert bytes to string and then load it as JSON
+creds_dict = json.loads(decoded_bytes.decode('utf-8'))
 
 credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
