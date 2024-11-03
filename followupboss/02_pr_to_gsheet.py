@@ -186,9 +186,7 @@ data = sheet.get_all_values()
 df_1 = pd.DataFrame(data[1:], columns=data[0])
 
 unique_people_id = df_1[['Lead ID', 'ID']]
-# unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True, inplace=True)
-unique_people_id.loc[unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True).notnull(), 'ID'] = unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True)
-
+unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True, inplace=True)
 unique_people_id.dropna(subset=['ID'], inplace=True)
 
 df['People ID From FB'] = df['People ID From FB'].astype(int)
