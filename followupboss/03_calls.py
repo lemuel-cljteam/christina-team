@@ -8,7 +8,11 @@ from datetime import datetime as dt
 import pytz
 import os
 
+api_key = "FOLLOWUPBOSS_APIKEY"
+X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
+X_System = "FOLLOWUPBOSS_XSYSTEM"
 mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
 
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'

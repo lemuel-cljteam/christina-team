@@ -25,6 +25,7 @@ api_key = "FOLLOWUPBOSS_APIKEY"
 X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
 X_System = "FOLLOWUPBOSS_XSYSTEM"
 mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
@@ -86,7 +87,7 @@ credentials = Credentials.from_service_account_info(creds_dict, scopes=[
 
 client = gspread.authorize(credentials)
 
-sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
+sheet = client.open_by_key(gsheetid).worksheet("Leads")
 data = sheet.get_all_values()
 df_leads = pd.DataFrame(data[1:], columns=data[0])
 
@@ -368,7 +369,7 @@ credentials = Credentials.from_service_account_info(creds_dict, scopes=[
 client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
-sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
+sheet = client.open_by_key(gsheetid).worksheet("Leads")
 
 sheet.clear()
 

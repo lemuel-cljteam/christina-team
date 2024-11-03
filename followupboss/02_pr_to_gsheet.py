@@ -11,7 +11,11 @@ import pytz
 import os
 import json
 
+api_key = "FOLLOWUPBOSS_APIKEY"
+X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
+X_System = "FOLLOWUPBOSS_XSYSTEM"
 mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
 
 working_directory = os.getcwd()
 
@@ -180,7 +184,7 @@ credentials = Credentials.from_service_account_info(creds_dict, scopes=[
 client = gspread.authorize(credentials)
 
 # Open the Google Sheet by name or by URL
-sheet = client.open_by_key("1UAtfmU1LSsIvfFBDdS0cpUrrhsW9ZDC0mDKF1kj8Ato").worksheet("Leads")
+sheet = client.open_by_key(gsheetid).worksheet("Leads")
 
 # Get all data in the sheet
 data = sheet.get_all_values()

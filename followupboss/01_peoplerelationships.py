@@ -25,6 +25,7 @@ api_key = "FOLLOWUPBOSS_APIKEY"
 X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
 X_System = "FOLLOWUPBOSS_XSYSTEM"
 mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
