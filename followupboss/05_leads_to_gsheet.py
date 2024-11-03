@@ -74,16 +74,36 @@ df['Update Source'] = "Followup boss"
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
 creds = os.getenv("GOOGLE_CREDENTIALS")
-decoded_bytes = base64.b64decode(creds)
+if not creds:
+    raise ValueError("GOOGLE_CREDENTIALS environment variable is not set.")
 
-# Convert bytes to string and then load it as JSON
-creds_dict = json.loads(decoded_bytes.decode('utf-8'))
+try:
+    # Decode the Base64 string to bytes
+    decoded_bytes = base64.b64decode(creds)
+    
+    # Convert bytes to string and then load it as JSON
+    creds_dict = json.loads(decoded_bytes.decode('utf-8'))
+    
+    # Create credentials from the loaded JSON
+    credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
+    
+    # Authorize the client with the credentials
+    client = gspread.authorize(credentials)
 
-credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
+    # Open the Google Sheet by key (replace 'gsheetid' with your actual sheet ID)
+    gsheetid = 'your_google_sheet_id_here'  # Replace with your actual Google Sheet ID
+    sheet = client.open_by_key(gsheetid).worksheet("Leads")
 
-client = gspread.authorize(credentials)
+    # Now you can interact with the sheet (e.g., read data, write data)
+    print("Successfully accessed the Google Sheet!")
 
-sheet = client.open_by_key(gsheetid).worksheet("Leads")
+except (ValueError, json.JSONDecodeError, base64.binascii.Error) as e:
+    print(f"Error processing credentials: {e}")
+except gspread.exceptions.SpreadsheetNotFound as e:
+    print(f"Error: {e}. Ensure the Google Sheet ID is correct and that you have access.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+    
 data = sheet.get_all_values()
 df_leads = pd.DataFrame(data[1:], columns=data[0])
 
