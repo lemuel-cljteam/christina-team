@@ -21,9 +21,9 @@ hoover_tz = pytz.timezone('America/Chicago')
 current_time_initial = datetime.now(hoover_tz)
 current_time_ph_initial = datetime.now()
 
-api_key = "FOLLOWUPBOSS_APIKEY"
-X_System_Key = "FOLLOWUPBOSS_XSYSTEMKEY"
-X_System = "FOLLOWUPBOSS_XSYSTEM"
+api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
+X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
+X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
 
