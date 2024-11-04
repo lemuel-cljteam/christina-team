@@ -377,9 +377,13 @@ data.insert(0, df_final.columns.tolist())  # Add header
 # except Exception as e:
 #     print("Error updating the sheet:", e)
 
-sheet.update(data)
-
-print("Overwritten Leads")
+try:
+    sheet.update(data)
+    print("Overwritten Leads")
+except Exception as e:
+    print(e)
+    df_final_snap.to_csv('leads.csv', index=False)
+    print("Leads to csv instead")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
