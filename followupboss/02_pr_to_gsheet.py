@@ -400,6 +400,13 @@ df_final = pd.concat([df_from_fub, df_app], ignore_index=True)
 # Open the Google Sheet by name or by URL
 sheet = client.open_by_key(gsheetid).worksheet("People Relationships")
 
+data = sheet.get_all_values()
+
+df = pd.DataFrame(data[1:], columns=data[0])
+
+backup_file_path = 'people_relationships_backup.csv'
+df.to_csv(backup_file_path, index=False)
+
 sheet.clear()
 
 df_final = df_final.replace('', None)
