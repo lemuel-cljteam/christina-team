@@ -46,6 +46,12 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Set Git identity
+        run: |
+          git config --global user.email "lemuelt@cljteam.com"
+          git config --global user.name "Lemuel"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lalala0095/christina
+          
       - name: Run People Relationships 1 script
         run: |
           python followupboss/01_peoplerelationships.py
