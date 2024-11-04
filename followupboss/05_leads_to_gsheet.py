@@ -354,6 +354,9 @@ df = pd.DataFrame(data[1:], columns=data[0])
 
 backup_file_path = 'leads_backup.csv'
 df.to_csv(backup_file_path, index=False)
+subprocess.run(['git', 'add', backup_file_path])
+subprocess.run(['git', 'commit', '-m', 'Backup leads old to CSV'])
+subprocess.run(['git', 'push'])
 
 sheet.clear()
 
@@ -390,11 +393,11 @@ try:
     print("Overwritten Leads")
 except Exception as e:
     print(e)
-    df_final_snap.to_csv('leads.csv', index=False)
+    df_final_snap.to_csv('leads_new.csv', index=False)
     subprocess.run(['git', 'add', backup_file_path])
-    subprocess.run(['git', 'commit', '-m', 'Backup leads to CSV'])
+    subprocess.run(['git', 'commit', '-m', 'Backup leads new to CSV'])
     subprocess.run(['git', 'push'])
-    print("Leads to csv instead")
+    print("Leads new to csv instead")
 
 hoover_tz = pytz.timezone('America/Chicago')
 

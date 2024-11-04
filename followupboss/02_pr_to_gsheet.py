@@ -407,12 +407,16 @@ df = pd.DataFrame(data[1:], columns=data[0])
 
 backup_file_path = 'people_relationships_backup.csv'
 df.to_csv(backup_file_path, index=False)
+subprocess.run(['git', 'add', backup_file_path])
+subprocess.run(['git', 'commit', '-m', 'Backup people relationships old to CSV'])
+subprocess.run(['git', 'push'])
 
 sheet.clear()
 
 df_final = df_final.replace('', None)
 # df_final = df_final.replace([np.inf, -np.inf], np.nan).fillna(np.nan)
 df_final.drop('_id', axis=1, inplace=True)
+df_final_copy = df_final.copy()
 
 data = [df_final.columns.values.tolist()] + df_final.values.tolist()
 
@@ -421,9 +425,9 @@ try:
     print("Overwritten People Relationships")
 except Exception as e:
     print(e)
-    df.to_csv('people_relationships_backup.csv', index=False)
+    df_final_copy.to_csv('people_relationships_new.csv', index=False)
     subprocess.run(['git', 'add', backup_file_path])
-    subprocess.run(['git', 'commit', '-m', 'Backup people relationships to CSV'])
+    subprocess.run(['git', 'commit', '-m', 'Backup people relationships new to CSV'])
     subprocess.run(['git', 'push'])
     print("People relationships to csv instead")
 
