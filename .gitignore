@@ -1,6 +1,5 @@
 venv
 *.ipynb
-*.csv
 followupboss/06_calls_to_gsheet.py
 followupboss/backup_gsheet_to_mongodb.py
 followupboss/calls_try.py
