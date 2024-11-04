@@ -11,6 +11,7 @@ from google.oauth2.service_account import Credentials
 import uuid
 import numpy as np
 import os
+import subprocess
 
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
@@ -347,6 +348,13 @@ df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 
 sheet = client.open_by_key(gsheetid).worksheet("Leads")
 
+data = sheet.get_all_values()
+
+df = pd.DataFrame(data[1:], columns=data[0])
+
+backup_file_path = 'leads_backup.csv'
+df.to_csv(backup_file_path, index=False)
+
 sheet.clear()
 
 # df_final = df_final.replace('', None)
@@ -383,6 +391,9 @@ try:
 except Exception as e:
     print(e)
     df_final_snap.to_csv('leads.csv', index=False)
+    subprocess.run(['git', 'add', backup_file_path])
+    subprocess.run(['git', 'commit', '-m', 'Backup leads to CSV'])
+    subprocess.run(['git', 'push'])
     print("Leads to csv instead")
 
 hoover_tz = pytz.timezone('America/Chicago')

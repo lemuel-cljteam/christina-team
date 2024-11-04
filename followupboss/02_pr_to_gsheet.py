@@ -10,6 +10,7 @@ import pytz
 import os
 import json
 import base64
+import subprocess
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
@@ -415,8 +416,16 @@ df_final.drop('_id', axis=1, inplace=True)
 
 data = [df_final.columns.values.tolist()] + df_final.values.tolist()
 
-sheet.update(data)
-print("Overwritten People Relationships")
+try:
+    sheet.update(data)
+    print("Overwritten People Relationships")
+except Exception as e:
+    print(e)
+    df.to_csv('people_relationships_backup.csv', index=False)
+    subprocess.run(['git', 'add', backup_file_path])
+    subprocess.run(['git', 'commit', '-m', 'Backup people relationships to CSV'])
+    subprocess.run(['git', 'push'])
+    print("People relationships to csv instead")
 
 final_count_of_collection = count_of_all_documents() - initial_count_of_collection
 print(f'Added {final_count_of_collection} in the collection {collection.name}')
