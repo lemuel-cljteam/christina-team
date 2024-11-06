@@ -398,6 +398,9 @@ except Exception as e:
     subprocess.run(['git', 'commit', '-m', 'Backup leads new to CSV'])
     subprocess.run(['git', 'push'])
     print("Leads new to csv instead")
+    df = pd.read_csv('leads_new.csv')
+    sheet.update([df.columns.values.tolist()] + df.values.tolist())
+    print("Leads new copied to gsheet")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
