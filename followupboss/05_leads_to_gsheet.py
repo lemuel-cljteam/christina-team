@@ -108,7 +108,7 @@ df_new['Budget'] = df_new['price']
 df_app_only = df_leads[df_leads['Update Source'] == 'App'].copy()
 df_app_only.loc[:, 'Year'] = df_app_only['Year'].astype('int')
 # df_app_only['Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.date
-df_app_only.loc[:, 'Date Added'] = df_app_only['Date Added'].dt.date
+df_app_only.loc[:, 'Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.strftime('%Y-%m-%d')
 # df_app_only['Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'])
 df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned']).dt.strftime('%Y-%m-%d')
 # df_app_only['Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'])
