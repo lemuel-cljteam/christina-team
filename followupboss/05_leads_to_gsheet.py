@@ -349,7 +349,8 @@ df_fub_only = df_fub_only[[
     'Budget'
 ]]
 
-# df_app_only.reset_index(inplace=True)
+df_fub_only.reset_index(drop=True, inplace=True)
+df_app_only.reset_index(drop=True, inplace=True)
 
 df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 # df_final.drop(['index'], axis=1, inplace=True)
