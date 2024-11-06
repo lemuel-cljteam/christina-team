@@ -86,11 +86,12 @@ data = sheet.get_all_values()
 df_leads = pd.DataFrame(data[1:], columns=data[0])
 
 unique_people_id = df_leads[['Lead ID', 'ID']].copy()
-unique_people_id.replace({'ID': r'^\s*$'}, float('NaN'), regex=True, inplace=True)
+# unique_people_id.replace({'ID': r'^\s*$'}, float('NaN'), regex=True, inplace=True)
+unique_people_id.loc[:,'ID'] = unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True)
 unique_people_id.dropna(subset=['ID'], inplace=True)
-unique_people_id['ID'] = unique_people_id['ID'].astype(int)
+unique_people_id.loc[:, 'ID'] = unique_people_id['ID'].astype(int)
 
-df['id'] = df['id'].astype(int)
+df.loc[:,'id'] = df['id'].astype(int)
 
 print(f'length of rows of people from followup boss before merge: {len(df)}')
 df_new = pd.merge(df, unique_people_id, 'left', left_on='id', right_on='ID')

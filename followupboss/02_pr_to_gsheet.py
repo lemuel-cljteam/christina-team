@@ -187,11 +187,12 @@ data = sheet.get_all_values()
 df_1 = pd.DataFrame(data[1:], columns=data[0])
 
 unique_people_id = df_1[['Lead ID', 'ID']].copy()
-unique_people_id.replace({'ID': r'^\s*$'}, float('NaN'), regex=True, inplace=True)
+# unique_people_id.replace({'ID': r'^\s*$'}, float('NaN'), regex=True, inplace=True)
+unique_people_id.loc[:,'ID'] = unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True)
 unique_people_id.dropna(subset=['ID'], inplace=True)
-unique_people_id['ID'] = unique_people_id['ID'].astype(int)
+unique_people_id.loc[:, 'ID'] = unique_people_id['ID'].astype(int)
 
-df['People ID From FB'] = df['People ID From FB'].astype(int)
+df.loc[:, 'People ID From FB'] = df['People ID From FB'].astype(int)
 
 print(f'length of rows of people relationships from followup boss before merge: {len(df)}')
 df_new = pd.merge(df, unique_people_id, 'left', left_on='People ID From FB', right_on='ID')
@@ -274,7 +275,7 @@ df_new = df_new[[
 df_new['Row Number'] = df_new.groupby('Lead ID').cumcount() + 1
 
 # Step 2: Concatenate 'Lead ID' with the row number to create 'Relationship ID'
-df_new['Relationship ID'] = df_new['Lead ID'] + '-' + df_new['Row Number'].astype(str)
+df_new.loc[:, 'Relationship ID'] = df_new['Lead ID'] + '-' + df_new['Row Number'].astype(str)
 df_new.replace([np.inf, -np.inf, np.nan], '', inplace=True)
 
 # Resulting DataFrame

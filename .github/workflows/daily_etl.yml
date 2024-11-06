@@ -52,13 +52,13 @@ jobs:
           git config --global user.name "Lemuel"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lalala0095/christina
           
-      - name: Run People Relationships 1 script
-        run: |
-          python followupboss/01_peoplerelationships.py
+      # - name: Run People Relationships 1 script
+      #   run: |
+      #     python followupboss/01_peoplerelationships.py
       
-      - name: Run People Relationships 2 script
-        run: |
-          python followupboss/02_pr_to_gsheet.py
+      # - name: Run People Relationships 2 script
+      #   run: |
+      #     python followupboss/02_pr_to_gsheet.py
 
       - name: Run People 1 script
         run: |
