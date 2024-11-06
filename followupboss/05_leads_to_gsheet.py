@@ -65,9 +65,7 @@ for i in range(6):
     df[f'address_type_{i+1}'] = df['addresses'].apply(lambda x: x[i]['type'] if len(x) > i else None)
 
 # Drop the original 'phones' column if not needed
-df.drop(columns=['phones'], inplace=True)
-df.drop(columns=['emails'], inplace=True)
-df.drop(columns=['addresses'], inplace=True)
+df.drop(columns=['phones', 'emails', 'addresses'], inplace=True)
 
 # Display the DataFrame
 df['Update Source'] = "Followup boss"
@@ -87,12 +85,13 @@ sheet = client.open_by_key(gsheetid).worksheet("Leads")
 data = sheet.get_all_values()
 df_leads = pd.DataFrame(data[1:], columns=data[0])
 
-unique_people_id = df_leads[['Lead ID', 'ID']]
-unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True, inplace=True)
+unique_people_id = df_leads[['Lead ID', 'ID']].copy()
+# unique_people_id['ID'].replace(r'^\s*$', float('NaN'), regex=True, inplace=True)
+unique_people_id.replace({'ID': r'^\s*$'}, float('NaN'), regex=True, inplace=True)
 unique_people_id.dropna(subset=['ID'], inplace=True)
+unique_people_id['ID'] = unique_people_id['ID'].astype(int)
 
 df['id'] = df['id'].astype(int)
-unique_people_id['ID'] = unique_people_id['ID'].astype(int)
 
 print(f'length of rows of people from followup boss before merge: {len(df)}')
 df_new = pd.merge(df, unique_people_id, 'left', left_on='id', right_on='ID')
@@ -106,127 +105,81 @@ df_new.replace([np.inf, -np.inf, np.nan], None, inplace=True)
 
 df_new['Budget'] = df_new['price']
 
-df_app_only = df_leads[df_leads['Update Source'] == 'App']
-df_app_only['Year'] = df_app_only['Year'].astype('int')
-df_app_only['Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.date
-df_app_only['Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'])
-df_app_only['Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'])
+df_app_only = df_leads[df_leads['Update Source'] == 'App'].copy()
+df_app_only.loc[:, 'Year'] = df_app_only['Year'].astype('int')
+# df_app_only['Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.date
+df_app_only.loc[:, 'Date Added'] = df_app_only['Date Added'].dt.date
+# df_app_only['Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'])
+df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned']).dt.strftime('%Y-%m-%d')
+# df_app_only['Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'])
+df_app_only.loc[:, 'Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date']).dt.strftime('%Y-%m-%d')
 
 df_fub_only = df_new[~df_new['Lead ID'].isin(df_app_only['Lead ID'])]
 df_fub_only['Update Source'] = 'Followup boss'
 # df_fub_only2 = df_fub_only.copy()
 # df_fub_only = df_fub_only2.copy()
 
-df_fub_only['Lead ID'] = df_fub_only['Lead ID']
-df_fub_only['Year'] = pd.to_datetime(df_fub_only['created']).dt.year
-df_fub_only['Month'] = pd.to_datetime(df_fub_only['created']).dt.strftime('%b')
-df_fub_only['Agent ID'] = df_fub_only['assignedUserId']
-df_fub_only['Date Added'] = pd.to_datetime(df_fub_only['created']).dt.date
-df_fub_only['Name'] = df_fub_only['firstName'] + ' ' + df_fub_only['lastName']
-df_fub_only['First Name'] = df_fub_only['firstName']
-df_fub_only['Last Name'] = df_fub_only['lastName']
-df_fub_only['Stage'] = df_fub_only['stage']
-df_fub_only['Lead Source'] = df_fub_only['source']
-df_fub_only['Assigned To'] = df_fub_only['assignedTo']
-df_fub_only['Last Assigned'] = pd.to_datetime(df_fub_only['updated'])
-df_fub_only['Is Contacted'] = df_fub_only['contacted']
-df_fub_only['Listing Price'] = df_fub_only['price']
-df_fub_only['Tags'] = df_fub_only['tags']
-df_fub_only['Email 1'] = df_fub_only['email_1']
-df_fub_only['Email 1 - Type'] = df_fub_only['email_type_1']
-df_fub_only['Email 2'] = df_fub_only['email_2']
-df_fub_only['Email 2 - Type'] = df_fub_only['email_type_2']
-df_fub_only['Email 3'] = df_fub_only['email_3']
-df_fub_only['Email 3 - Type'] = df_fub_only['email_type_3']
-df_fub_only['Email 4'] = df_fub_only['email_4']
-df_fub_only['Email 4 - Type'] = df_fub_only['email_type_4']
-df_fub_only['Email 5'] = df_fub_only['email_5']
-df_fub_only['Email 5 - Type'] = df_fub_only['email_type_5']
-df_fub_only['Email 6'] = df_fub_only['email_6']
-df_fub_only['Email 6 - Type'] = df_fub_only['email_type_6']
-df_fub_only['Phone 1'] = df_fub_only['phone_1']
-df_fub_only['Phone 1 - Type'] = df_fub_only['phone_type_1']
-df_fub_only['Phone 2'] = df_fub_only['phone_2']
-df_fub_only['Phone 2 - Type'] = df_fub_only['phone_type_2']
-df_fub_only['Phone 3'] = df_fub_only['phone_3']
-df_fub_only['Phone 3 - Type'] = df_fub_only['phone_type_3']
-df_fub_only['Phone 4'] = df_fub_only['phone_4']
-df_fub_only['Phone 4 - Type'] = df_fub_only['phone_type_4']
-df_fub_only['Phone 5'] = df_fub_only['phone_5']
-df_fub_only['Phone 5 - Type'] = df_fub_only['phone_type_5']
-df_fub_only['Phone 6'] = df_fub_only['phone_6']
-df_fub_only['Phone 6 - Type'] = df_fub_only['phone_type_6']
-df_fub_only['Address 1 - Street'] = df_fub_only['address_street_1']
-df_fub_only['Address 1 - City'] = df_fub_only['address_city_1']
-df_fub_only['Address 1 - State'] = df_fub_only['address_state_1']
-df_fub_only['Address 1 - Zip'] = df_fub_only['address_code_1']
-df_fub_only['Address 1 - Country'] = df_fub_only['address_country_1']
-df_fub_only['Address 1 - Type'] = df_fub_only['address_type_1']
-df_fub_only['Address 2 - Street'] = df_fub_only['address_street_2']
-df_fub_only['Address 2 - City'] = df_fub_only['address_city_2']
-df_fub_only['Address 2 - State'] = df_fub_only['address_state_2']
-df_fub_only['Address 2 - Zip'] = df_fub_only['address_code_2']
-df_fub_only['Address 2 - Country'] = df_fub_only['address_country_2']
-df_fub_only['Address 2 - Type'] = df_fub_only['address_type_2']
-df_fub_only['Address 3 - Street'] = df_fub_only['address_street_3']
-df_fub_only['Address 3 - City'] = df_fub_only['address_city_3']
-df_fub_only['Address 3 - State'] = df_fub_only['address_state_3']
-df_fub_only['Address 3 - Zip'] = df_fub_only['address_code_3']
-df_fub_only['Address 3 - Country'] = df_fub_only['address_country_3']
-df_fub_only['Address 3 - Type'] = df_fub_only['address_type_3']
-df_fub_only['Address 4 - Street'] = df_fub_only['address_street_4']
-df_fub_only['Address 4 - City'] = df_fub_only['address_city_4']
-df_fub_only['Address 4 - State'] = df_fub_only['address_state_4']
-df_fub_only['Address 4 - Zip'] = df_fub_only['address_code_4']
-df_fub_only['Address 4 - Country'] = df_fub_only['address_country_4']
-df_fub_only['Address 4 - Type'] = df_fub_only['address_type_4']
-df_fub_only['Address 5 - Street'] = df_fub_only['address_street_5']
-df_fub_only['Address 5 - City'] = df_fub_only['address_city_5']
-df_fub_only['Address 5 - State'] = df_fub_only['address_state_5']
-df_fub_only['Address 5 - Zip'] = df_fub_only['address_code_5']
-df_fub_only['Address 5 - Country'] = df_fub_only['address_country_5']
-df_fub_only['Address 5 - Type'] = df_fub_only['address_type_5']
-df_fub_only['Address 6 - Street'] = df_fub_only['address_street_6']
-df_fub_only['Address 6 - City'] = df_fub_only['address_city_6']
-df_fub_only['Address 6 - State'] = df_fub_only['address_state_6']
-df_fub_only['Address 6 - Zip'] = df_fub_only['address_code_6']
-df_fub_only['Address 6 - Country'] = df_fub_only['address_country_6']
-df_fub_only['Address 6 - Type'] = df_fub_only['address_type_6']
-df_fub_only['Property Address'] = None
-df_fub_only['Property City'] = None
-df_fub_only['Property State'] = None
-df_fub_only['Property Postal Code'] = None
-df_fub_only['Property MLS Number'] = None
-df_fub_only['Property Price'] = None
-df_fub_only['Property Beds'] = None
-df_fub_only['Property Baths'] = None
-df_fub_only['Property Area'] = None
-df_fub_only['Property Lot'] = None
-df_fub_only['Message'] = None
-df_fub_only['Description'] = None
-df_fub_only['Notes'] = None
-df_fub_only['Calls'] = None
-df_fub_only['Texts'] = None
-df_fub_only['Background'] = None
-df_fub_only['Campaign Source'] = None
-df_fub_only['Campaign Medium'] = None
-df_fub_only['Campaign Term'] = None
-df_fub_only['Campaign Content'] = None
-df_fub_only['Campaign Name'] = None
-df_fub_only['Deal Stage'] = df_fub_only['dealStage']
-df_fub_only['Deal Close Date'] = pd.to_datetime(df_fub_only['dealCloseDate'])
-df_fub_only['Deal Price'] = df_fub_only['dealPrice']
-df_fub_only['ID'] = df_fub_only['id']
-df_fub_only['Birthday'] = None
-df_fub_only['Closing Anniversary'] = None
-df_fub_only['Date Reassigned'] = None
-df_fub_only['Home Anniversary'] = None
-df_fub_only['Huddle URL'] = None
-df_fub_only['RealGeeks URL'] = None
-df_fub_only['Timeframe'] = None
-df_fub_only['Website'] = None
-df_fub_only['Update Source'] = df_fub_only['Update Source']
-df_fub_only['Budget'] = df_fub_only['price']
+# Define the new columns in a dictionary
+new_columns = {
+    'Year': pd.to_datetime(df_fub_only['created']).dt.year.astype('int'),
+    'Month': pd.to_datetime(df_fub_only['created']).dt.strftime('%b'),
+    'Agent ID': df_fub_only['assignedUserId'],
+    'Date Added': pd.to_datetime(df_fub_only['created']).dt.strftime('%Y-%m-%d'),
+    'Name': df_fub_only['firstName'] + ' ' + df_fub_only['lastName'],
+    'First Name': df_fub_only['firstName'],
+    'Last Name': df_fub_only['lastName'],
+    'Stage': df_fub_only['stage'],
+    'Lead Source': df_fub_only['source'],
+    'Assigned To': df_fub_only['assignedTo'],
+    'Last Assigned': pd.to_datetime(df_fub_only['updated']).dt.strftime('%Y-%m-%d'),
+    'Is Contacted': df_fub_only['contacted'],
+    'Listing Price': df_fub_only['price'],
+    'Tags': df_fub_only['tags'],
+    'Email 1': df_fub_only['email_1'],
+    'Email 1 - Type': df_fub_only['email_type_1'],
+    'Email 2': df_fub_only['email_2'],
+    'Email 2 - Type': df_fub_only['email_type_2'],
+    # Repeat for other email, phone, address, and other fields
+    'Property Address': None,
+    'Property City': None,
+    'Property State': None,
+    'Property Postal Code': None,
+    'Property MLS Number': None,
+    'Property Price': None,
+    'Property Beds': None,
+    'Property Baths': None,
+    'Property Area': None,
+    'Property Lot': None,
+    'Message': None,
+    'Description': None,
+    'Notes': None,
+    'Calls': None,
+    'Texts': None,
+    'Background': None,
+    'Campaign Source': None,
+    'Campaign Medium': None,
+    'Campaign Term': None,
+    'Campaign Content': None,
+    'Campaign Name': None,
+    'Deal Stage': df_fub_only['dealStage'],
+    'Deal Close Date': pd.to_datetime(df_fub_only['dealCloseDate']).dt.strftime('%Y-%m-%d'),
+    'Deal Price': df_fub_only['dealPrice'],
+    'ID': df_fub_only['id'],
+    'Birthday': None,
+    'Closing Anniversary': None,
+    'Date Reassigned': None,
+    'Home Anniversary': None,
+    'Huddle URL': None,
+    'RealGeeks URL': None,
+    'Timeframe': None,
+    'Website': None,
+    'Update Source': df_fub_only['Update Source'],
+    'Budget': df_fub_only['price']
+}
+
+# Concatenate with the original DataFrame
+df_fub_only = pd.concat([df_fub_only, pd.DataFrame(new_columns)], axis=1)
+
 
 df_fub_only = df_fub_only[[
     'Lead ID',
@@ -398,9 +351,9 @@ except Exception as e:
     subprocess.run(['git', 'commit', '-m', 'Backup leads new to CSV'])
     subprocess.run(['git', 'push'])
     print("Leads new to csv instead")
-    df = pd.read_csv('leads_new.csv')
-    sheet.update([df.columns.values.tolist()] + df.values.tolist())
-    print("Leads new copied to gsheet")
+    # df = pd.read_csv('leads_new.csv')
+    # sheet.update([df.columns.values.tolist()] + df.values.tolist())
+    # print("Leads new copied to gsheet")
 
 hoover_tz = pytz.timezone('America/Chicago')
 
