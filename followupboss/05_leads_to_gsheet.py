@@ -223,7 +223,7 @@ new_columns = {
     'Deal Stage': df_fub_only['dealStage'],
     'Deal Close Date': pd.to_datetime(df_fub_only['dealCloseDate']).dt.strftime('%Y-%m-%d'),
     'Deal Price': df_fub_only['dealPrice'],
-    'ID': df_fub_only['id'],
+    'ID': df_fub_only['ID'],
     'Birthday': None,
     'Closing Anniversary': None,
     'Date Reassigned': None,
