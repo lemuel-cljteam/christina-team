@@ -92,9 +92,14 @@ unique_people_id.dropna(subset=['ID'], inplace=True)
 unique_people_id.loc[:, 'ID'] = unique_people_id['ID'].astype(int)
 
 df.loc[:,'id'] = df['id'].astype(int)
+df.rename(
+    {'id': 'ID'}, axis=1, inplace=True
+)
 
 print(f'length of rows of people from followup boss before merge: {len(df)}')
-df_new = pd.merge(df, unique_people_id, 'left', left_on='id', right_on='ID')
+
+df_new = pd.merge(df, unique_people_id, 'left', on='ID')
+
 print(f'length of rows of people from followup boss after merge: {len(df)}')
 
 def generate_lead_id():
