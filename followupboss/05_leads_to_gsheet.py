@@ -360,7 +360,9 @@ sheet = client.open_by_key(gsheetid).worksheet("Agents")
 data = sheet.get_all_values()
 
 dfAgents = pd.DataFrame(data[1:], columns=data[0])
+dfAgents = dfAgents[['Agent ID', 'ID from Followupboss']]
 dfAgents['ID from Followupboss'] = pd.to_numeric(dfAgents['ID from Followupboss']) 
+
 df_fub_only = df_fub_only.merge(dfAgents, how='left', left_on='Agent ID', right_on='ID from Followupboss')
 df_fub_only = df_fub_only.drop(columns=['Agent ID_x', 'ID from Followupboss'])
 df_fub_only = df_fub_only.rename(
