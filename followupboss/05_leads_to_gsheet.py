@@ -356,7 +356,7 @@ df_fub_only = df_fub_only[[
 df_fub_only.reset_index(drop=True, inplace=True)
 df_app_only.reset_index(drop=True, inplace=True)
 
-df_fub_only = df_fub_only.drop(columns=['ID', 'Update Source', 'Budget'])
+# df_fub_only = df_fub_only.drop(columns=['ID', 'Update Source', 'Budget'])
 
 # map agent ids from followupboss to agent ids from app
 
