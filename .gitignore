@@ -13,3 +13,4 @@ credentials.json
 base64_credentials.txt
 test.txt
 requirements2.txt
+05_leads_to_gsheet manual.py

@@ -12,3 +12,16 @@ Update Leads Gsheet End time in USA: 2024-10-30 07:49:22.275865-05:00
 Update Leads Gsheet End time in PH: 2024-10-30 20:49:22.275865
 
 Update Leads Gsheet Total Running time: 0:00:28.284398
+People Extract Start time in USA: 2024-11-05 22:47:58.067472-06:00
+People Extract Start time in PH: 2024-11-06 12:47:58.067472
+There are 6335 documents now in followupboss_people_backup
+Added 37 in the collection followupboss_people_backup
+People Extract End time in USA: 2024-11-05 22:49:20.554751-06:00
+People Extract End time in PH: 2024-11-06 12:49:20.554751
+
+People Total Running time: 0:01:22.487279
+Total Number of leads: 6483 in the collection followupboss_people
+Update Leads Gsheet End time in USA: 2024-11-10 06:08:29.340857-06:00
+Update Leads Gsheet End time in PH: 2024-11-10 20:08:29.340857
+
+Update Leads Gsheet Total Running time: 0:00:40.164119

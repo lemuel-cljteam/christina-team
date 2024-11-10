@@ -27,6 +27,7 @@ X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
 X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
+creds = os.getenv("GOOGLE_CREDENTIALS")
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
@@ -71,8 +72,7 @@ df.drop(columns=['phones', 'emails', 'addresses'], inplace=True)
 df['Update Source'] = "Followup boss"
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-# creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-creds = os.getenv("GOOGLE_CREDENTIALS")
+
 if creds and os.path.exists(creds):
     credentials = Credentials.from_service_account_file(creds, scopes=SCOPES)
 else:
@@ -114,8 +114,7 @@ df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'
 # df_app_only['Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'])
 df_app_only.loc[:, 'Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date']).dt.strftime('%Y-%m-%d')
 
-df_fub_only = df_new[~df_new['Lead ID'].isin(df_app_only['Lead ID'])]
-df_fub_only['Update Source'] = 'Followup boss'
+df_fub_only = df_new[~df_new['Lead ID'].isin(df_app_only['Lead ID'])].copy()
 # df_fub_only2 = df_fub_only.copy()
 # df_fub_only = df_fub_only2.copy()
 
@@ -351,6 +350,23 @@ df_fub_only = df_fub_only[[
 
 df_fub_only.reset_index(drop=True, inplace=True)
 df_app_only.reset_index(drop=True, inplace=True)
+
+df_fub_only = df_fub_only.drop(columns=['ID', 'Update Source', 'Budget'])
+
+# map agent ids from followupboss to agent ids from app
+
+sheet = client.open_by_key(gsheetid).worksheet("Agents")
+
+data = sheet.get_all_values()
+
+dfAgents = pd.DataFrame(data[1:], columns=data[0])
+dfAgents['ID from Followupboss'] = pd.to_numeric(dfAgents['ID from Followupboss']) 
+df_fub_only = df_fub_only.merge(dfAgents, how='left', left_on='Agent ID', right_on='ID from Followupboss')
+df_fub_only = df_fub_only.drop(columns=['Agent ID_x', 'ID from Followupboss'])
+df_fub_only = df_fub_only.rename(
+    {
+        'Agent ID_y': 'Agent ID'
+    }, axis=1)
 
 df_final = pd.concat([df_fub_only, df_app_only], ignore_index=True)
 # df_final.drop(['index'], axis=1, inplace=True)
