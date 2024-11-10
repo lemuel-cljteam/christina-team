@@ -239,7 +239,6 @@ new_columns = {
 # Concatenate with the original DataFrame
 df_fub_only = pd.concat([df_fub_only, pd.DataFrame(new_columns)], axis=1)
 
-
 df_fub_only = df_fub_only[[
     'Lead ID',
     'Year',
@@ -356,7 +355,19 @@ df_fub_only = df_fub_only[[
 df_fub_only.reset_index(drop=True, inplace=True)
 df_app_only.reset_index(drop=True, inplace=True)
 
-# df_fub_only = df_fub_only.drop(columns=['ID', 'Update Source', 'Budget'])
+# there are resulting duplicated columns here that needs troubleshooting
+# print("df_fub_only columns:", df_fub_only.columns[df_fub_only.columns.duplicated()])
+# print("df_app_only columns:", df_app_only.columns[df_app_only.columns.duplicated()])
+# df_fub_only columns: Index(['ID', 'Update Source', 'Budget'], dtype='object')
+# df_app_only columns: Index([], dtype='object')
+
+# Drop duplicated columns by suffix pattern if they are created by merge (e.g., `_x`, `_y`)
+df_fub_only = df_fub_only.loc[:, ~df_fub_only.columns.duplicated()]
+
+
+# ----------
+# solution to drop the second columns
+df_fub_only = df_fub_only.loc[:, ~df_fub_only.columns.duplicated()]
 
 # map agent ids from followupboss to agent ids from app
 
