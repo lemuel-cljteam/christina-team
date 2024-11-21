@@ -92,8 +92,17 @@ unique_people_id.dropna(subset=['ID'], inplace=True)
 unique_people_id.loc[:, 'ID'] = unique_people_id['ID'].astype(int)
 
 df.loc[:,'id'] = df['id'].astype(int)
+df['realGeeksUrl'] = df['sourceUrl'].str.contains('realgeeks', case=False, na=False)
+
+def realgeeksurl(row):
+    if 'realgeeks' in row.lower():
+        return row
+    else:
+        return None
+    
+df['realGeeksUrl'] = df['sourceUrl'].apply(realgeeksurl)
 df.rename(
-    {'id': 'ID'}, axis=1, inplace=True
+    {'id': 'ID', 'realGeeksUrl': 'RealGeeks URL'}, axis=1, inplace=True
 )
 
 print(f'length of rows of people from followup boss before merge: {len(df)}')
@@ -245,7 +254,7 @@ new_columns = {
     'Date Reassigned': None,
     'Home Anniversary': None,
     'Huddle URL': None,
-    'RealGeeks URL': None,
+    'RealGeeks URL': df_fub_only['RealGeeks URL'],
     'Timeframe': None,
     'Website': None,
     'Update Source': df_fub_only['Update Source'],
