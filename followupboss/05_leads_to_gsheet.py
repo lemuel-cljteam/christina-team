@@ -116,19 +116,37 @@ df_app_only.loc[:, 'Year'] = df_app_only['Year'].astype('int')
 
 try:
     df_app_only.loc[:, 'Date Added'] = pd.to_datetime(df_app_only['Date Added']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Birthday'] = pd.to_datetime(df_app_only['Birthday']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Closing Anniversary'] = pd.to_datetime(df_app_only['Closing Anniversary']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Date Reassigned'] = pd.to_datetime(df_app_only['Date Reassigned']).dt.strftime('%Y-%m-%d')
-    df_app_only.loc[:, 'Home Anniversary'] = pd.to_datetime(df_app_only['Home Anniversary']).dt.strftime('%Y-%m-%d')
 except Exception as e:
     df_app_only.loc[:, 'Date Added'] = pd.to_datetime(df_app_only['Date Added'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+    
+try:
+    df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Last Assigned'] = pd.to_datetime(df_app_only['Last Assigned'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+
+try:
+    df_app_only.loc[:, 'Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Deal Close Date'] = pd.to_datetime(df_app_only['Deal Close Date'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+
+try:
+    df_app_only.loc[:, 'Birthday'] = pd.to_datetime(df_app_only['Birthday']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Birthday'] = pd.to_datetime(df_app_only['Birthday'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+
+try:
+    df_app_only.loc[:, 'Closing Anniversary'] = pd.to_datetime(df_app_only['Closing Anniversary']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Closing Anniversary'] = pd.to_datetime(df_app_only['Closing Anniversary'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+
+try:
+    df_app_only.loc[:, 'Date Reassigned'] = pd.to_datetime(df_app_only['Date Reassigned']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Date Reassigned'] = pd.to_datetime(df_app_only['Date Reassigned'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
+
+try:
+    df_app_only.loc[:, 'Home Anniversary'] = pd.to_datetime(df_app_only['Home Anniversary']).dt.strftime('%Y-%m-%d')
+except Exception as e:
     df_app_only.loc[:, 'Home Anniversary'] = pd.to_datetime(df_app_only['Home Anniversary'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
 
 df_fub_only = df_new[~df_new['Lead ID'].isin(df_app_only['Lead ID'])].copy()
