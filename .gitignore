@@ -15,3 +15,4 @@ test.txt
 requirements2.txt
 05_leads_to_gsheet manual.py
 base64_creds.txt
+ignore_this

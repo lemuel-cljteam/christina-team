@@ -1,17 +1,17 @@
 import base64
 import json
 
-def convert_to_base64():
+def convert_to_base64(json_file, output_file):
     # 1. Read the JSON file (ensure the file path is correct)
-    with open("example.json", "rb") as file:  # Open the file in binary mode
+    with open(json_file, "rb") as file:  # Open the file in binary mode
         # 2. Read the content of the file
         file_content = file.read()
 
     # 3. Encode the file content to Base64
     encoded_content = base64.b64encode(file_content).decode("utf-8")  # Decode to string for readability
 
-    # 4. Print or store the Base64 encoded string
-    print(encoded_content)
+    with open(output_file, 'w') as f:
+        f.write(encoded_content)
 
 import os
 from pymongo import MongoClient
@@ -40,7 +40,7 @@ def backup_script_df_input(backup_type, df_original, collection):
     # backup to mongodb
     df_backup = df_original.copy()
     df_backup['date_inserted'] = datetime.now()
-    collection_backup = db[collection]
+    collection_backup = collection
 
     df_dict = df_backup.to_dict(orient="records")
     record_backup = {
