@@ -11,7 +11,7 @@ import os
 import json
 import base64
 import subprocess
-from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
+from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input, error_logging
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
@@ -422,11 +422,11 @@ data = sheet.get_all_values()
 df = pd.DataFrame(data[1:], columns=data[0])
 
 backup_file_path = 'people_relationships_backup.csv'
-df.to_csv(backup_file_path, index=False)
+# df.to_csv(backup_file_path, index=False)
 
-subprocess.run(['git', 'add', backup_file_path])
-subprocess.run(['git', 'commit', '-m', 'Backup people relationships old to CSV'])
-subprocess.run(['git', 'push'])
+# subprocess.run(['git', 'add', backup_file_path])
+# subprocess.run(['git', 'commit', '-m', 'Backup people relationships old to CSV'])
+# subprocess.run(['git', 'push'])
 
 sheet.clear()
 
@@ -442,11 +442,12 @@ try:
     print("Overwritten People Relationships")
 except Exception as e:
     print(e)
-    df_final_copy.to_csv('people_relationships_new.csv', index=False)
-    subprocess.run(['git', 'add', backup_file_path])
-    subprocess.run(['git', 'commit', '-m', 'Backup people relationships new to CSV'])
-    subprocess.run(['git', 'push'])
-    print("People relationships to csv instead")
+    error_logging(error_type="people relationships error", error_doc=e)
+    # df_final_copy.to_csv('people_relationships_new.csv', index=False)
+    # subprocess.run(['git', 'add', backup_file_path])
+    # subprocess.run(['git', 'commit', '-m', 'Backup people relationships new to CSV'])
+    # subprocess.run(['git', 'push'])
+    # print("People relationships to csv instead")
 
 final_count_of_collection = count_of_all_documents() - initial_count_of_collection
 print(f'Added {final_count_of_collection} in the collection {collection.name}')

@@ -12,7 +12,7 @@ import uuid
 import numpy as np
 import os
 import subprocess
-from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
+from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input, error_logging
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
@@ -141,6 +141,7 @@ def convert_date(row):
             # Fallback to a specific format if the first attempt fails
             return pd.to_datetime(row, format='%m/%d/%Y').strftime('%Y-%m-%d')
         except Exception as e:
+            error_logging(error_type="convert date in df_app_only error", error_doc=e)
             # If both fail, return NaT or another default value
             return None  # or pd.NaT for a datetime-compatible value
 
@@ -548,10 +549,10 @@ backup_script_df_input(backup_type="app leads",
                        collection=db['app_people_backups'])
 
 backup_file_path = 'leads_backup.csv'
-df.to_csv(backup_file_path, index=False)
-subprocess.run(['git', 'add', backup_file_path])
-subprocess.run(['git', 'commit', '-m', 'Backup leads old to CSV'])
-subprocess.run(['git', 'push'])
+# df.to_csv(backup_file_path, index=False)
+# subprocess.run(['git', 'add', backup_file_path])
+# subprocess.run(['git', 'commit', '-m', 'Backup leads old to CSV'])
+# subprocess.run(['git', 'push'])
 
 sheet.clear()
 
@@ -587,12 +588,13 @@ try:
     sheet.update(data)
     print("Overwritten Leads")
 except Exception as e:
+    error_logging(error_type="cannot write leads to gsheet error", error_doc=e)
     print(e)
-    df_final_snap.to_csv('leads_new.csv', index=False)
-    subprocess.run(['git', 'add', backup_file_path])
-    subprocess.run(['git', 'commit', '-m', 'Backup leads new to CSV'])
-    subprocess.run(['git', 'push'])
-    print("Leads new to csv instead")
+    # df_final_snap.to_csv('leads_new.csv', index=False)
+    # subprocess.run(['git', 'add', backup_file_path])
+    # subprocess.run(['git', 'commit', '-m', 'Backup leads new to CSV'])
+    # subprocess.run(['git', 'push'])
+    # print("Leads new to csv instead")
     # df = pd.read_csv('leads_new.csv')
     # sheet.update([df.columns.values.tolist()] + df.values.tolist())
     # print("Leads new copied to gsheet")

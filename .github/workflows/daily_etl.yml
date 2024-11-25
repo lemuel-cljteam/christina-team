@@ -54,7 +54,8 @@ jobs:
         run: |
           git config --global user.email "lemuelt@cljteam.com"
           git config --global user.name "Lemuel"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lalala0095/christina
+# removing csv backups
+          # git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lalala0095/christina #
           
       - name: Run People Relationships 1 script
         run: |
