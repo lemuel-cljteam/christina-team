@@ -14,6 +14,14 @@ import os
 import subprocess
 from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
 
+api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
+X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
+X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
+mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
+creds = os.getenv("GOOGLE_CREDENTIALS")
+MONGO_URI = os.getenv("MONGO_URI")
+
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 logfile = os.path.join(working_directory, "followupboss", "logs.txt")
@@ -33,7 +41,7 @@ creds = os.getenv("GOOGLE_CREDENTIALS")
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
-client = MongoClient(F"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(MONGO_URI)
 db = client['Christina']
 collection = db['followupboss_people']
 

@@ -8,6 +8,14 @@ from datetime import datetime as dt
 import os
 from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
 
+api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
+X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
+X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
+mongopass = os.getenv("MONGODB_PASSWORD")
+gsheetid = os.getenv("GSHEET_ID")
+creds = os.getenv("GOOGLE_CREDENTIALS")
+MONGO_URI = os.getenv("MONGO_URI")
+
 working_directory = os.getcwd()
 
 hoover_tz = pytz.timezone('America/Chicago')
@@ -46,7 +54,7 @@ list_of_offsets = list(range(0, round(total, -1) + 1, 100))
 df_list = []
 
 from pymongo import MongoClient
-client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(MONGO_URI)
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 

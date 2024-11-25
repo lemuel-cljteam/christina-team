@@ -19,6 +19,7 @@ X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
 creds = os.getenv("GOOGLE_CREDENTIALS")
+MONGO_URI = os.getenv("MONGO_URI")
 
 working_directory = os.getcwd()
 
@@ -44,7 +45,7 @@ with open(logfile, 'a') as file:
 #run first the peoplerelationships.py
 
 # Connect to MongoDB (adjust the connection string as needed)
-client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(MONGO_URI)
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 
@@ -358,7 +359,7 @@ df_from_fub = df_new[[
 ]]
 
 # client = MongoClient()
-client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(MONGO_URI)
 db = client['Christina']
 collection = db['app_people_relationships']
 

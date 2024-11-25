@@ -18,6 +18,8 @@ X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
 X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
+creds = os.getenv("GOOGLE_CREDENTIALS")
+MONGO_URI = os.getenv("MONGO_URI")
 
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
@@ -49,7 +51,7 @@ r = requests.get(url, headers={'accept': "application/json",
 data = r.json()
 total = data["_metadata"]["total"]
 
-client = MongoClient(f"mongodb+srv://christina:{mongopass}@clusterchristina.57107.mongodb.net/test?retryWrites=true&w=majority&ssl=true")
+client = MongoClient(MONGO_URI)
 db = client['Christina']
 collection = db['followupboss_people']
 
