@@ -6,6 +6,7 @@ from tqdm import tqdm
 import pytz
 from datetime import datetime as dt
 import os
+from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
 
 working_directory = os.getcwd()
 
@@ -62,7 +63,14 @@ def count_of_all_documents():
     # print(f"There are {collection.count_documents({})} documents now in {collection.name}")
     return collection.count_documents({})
 
+# --------- backup before deletion -------- staging 
+backup_script_collection_input(backup_type="followupboss people relationships", 
+                               collection_source=collection, 
+                               collection_output=db['followupboss_people_relationships_backups'])
+
 delete_all()
+# ------------------------------
+
 for i in tqdm(list_of_offsets, total=len(list_of_offsets), desc="Processing People from Followup boss", leave=True):
     url = f"https://api.followupboss.com/v1/peopleRelationships?limit=100&offset={i}"
 

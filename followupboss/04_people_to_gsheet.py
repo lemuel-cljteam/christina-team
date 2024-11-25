@@ -69,7 +69,7 @@ print(f"There are {initial_count} documents now in {collection.name}")
 # backup to mongodb
 backup_script_collection_input(backup_type="followupboss people", 
                                collection_source=collection, 
-                               collection_output=db['followupboss_people_backup'])
+                               collection_output=db['followupboss_people_backups'])
 
 # -------delete all for replacement
 delete_all()
