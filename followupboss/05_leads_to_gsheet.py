@@ -533,6 +533,19 @@ data = sheet.get_all_values()
 
 df = pd.DataFrame(data[1:], columns=data[0])
 
+# backup to mongodb
+df_backup = df.copy()
+df_backup['date_inserted'] = datetime.now()
+collection_backup = db['app_people_backups']
+
+df_dict = df_backup.to_dict(orient="records")
+old_record_backup = {
+    "backup_type": "previous people data",
+    "date_inserted": datetime.now(), 
+    "people_relationships": df_dict
+}
+collection_backup.insert_one(old_record_backup)
+
 backup_file_path = 'leads_backup.csv'
 df.to_csv(backup_file_path, index=False)
 subprocess.run(['git', 'add', backup_file_path])
