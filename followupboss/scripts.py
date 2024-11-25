@@ -61,11 +61,11 @@ def backup_script_collection_input(backup_type, collection_source, collection_ou
 
     collection_output.insert_one(backup_document)
 
-def error_logging(error_type, error_doc):
+def error_logging(error_type, error_e):
     backup_document = {
         'backup_type': error_type,
         'date_inserted': datetime.now(),
-        'data': error_doc
+        'data': str(error_e)
     }
 
     db['error_logs'].insert_one(backup_document)

@@ -134,14 +134,15 @@ df_app_only.loc[:, 'Year'] = df_app_only['Year'].astype('int')
 
 def convert_date(row):
     try:
-        # Try parsing the date without specifying the format
+        if pd.isnull(row):
+            return None
         return pd.to_datetime(row).strftime('%Y-%m-%d')
-    except Exception:
+    except Exception as e:
         try:
             # Fallback to a specific format if the first attempt fails
             return pd.to_datetime(row, format='%m/%d/%Y').strftime('%Y-%m-%d')
         except Exception as e:
-            error_logging(error_type="convert date in df_app_only error", error_doc=e)
+            error_logging(error_type="convert date in df_app_only error", error_e=e)
             # If both fail, return NaT or another default value
             return None  # or pd.NaT for a datetime-compatible value
 
@@ -588,7 +589,7 @@ try:
     sheet.update(data)
     print("Overwritten Leads")
 except Exception as e:
-    error_logging(error_type="cannot write leads to gsheet error", error_doc=e)
+    error_logging(error_type="cannot write leads to gsheet error", error_e=e)
     print(e)
     # df_final_snap.to_csv('leads_new.csv', index=False)
     # subprocess.run(['git', 'add', backup_file_path])

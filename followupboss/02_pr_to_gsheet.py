@@ -442,7 +442,7 @@ try:
     print("Overwritten People Relationships")
 except Exception as e:
     print(e)
-    error_logging(error_type="people relationships error", error_doc=e)
+    error_logging(error_type="people relationships error", error_e=e)
     # df_final_copy.to_csv('people_relationships_new.csv', index=False)
     # subprocess.run(['git', 'add', backup_file_path])
     # subprocess.run(['git', 'commit', '-m', 'Backup people relationships new to CSV'])
