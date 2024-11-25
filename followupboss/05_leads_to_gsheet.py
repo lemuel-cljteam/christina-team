@@ -12,6 +12,7 @@ import uuid
 import numpy as np
 import os
 import subprocess
+from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
 
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
@@ -534,17 +535,9 @@ data = sheet.get_all_values()
 df = pd.DataFrame(data[1:], columns=data[0])
 
 # backup to mongodb
-df_backup = df.copy()
-df_backup['date_inserted'] = datetime.now()
-collection_backup = db['app_people_backups']
-
-df_dict = df_backup.to_dict(orient="records")
-old_record_backup = {
-    "backup_type": "previous people data",
-    "date_inserted": datetime.now(), 
-    "people_relationships": df_dict
-}
-collection_backup.insert_one(old_record_backup)
+backup_script_df_input(backup_type="app leads",
+                       df_original=df,
+                       collection=db['app_people_backups'])
 
 backup_file_path = 'leads_backup.csv'
 df.to_csv(backup_file_path, index=False)

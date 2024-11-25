@@ -11,13 +11,14 @@ import os
 import json
 import base64
 import subprocess
-from followupboss.logging import logging
+from followupboss.scripts import mongodb_logging, backup_script_collection_input, backup_script_df_input
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
 X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
+creds = os.getenv("GOOGLE_CREDENTIALS")
 
 working_directory = os.getcwd()
 
@@ -29,10 +30,10 @@ current_time_ph_initial = datetime.now()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
 logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 
-logging(event_var=f"Update People Relationships Gsheet Start time in USA: {current_time_initial}",
+mongodb_logging(event_var=f"Update People Relationships Gsheet Start time in USA: {current_time_initial}",
         old_doc=None,
         new_doc=None)
-logging(event_var=f"Update People Relationships Gsheet Start time in PH: {current_time_ph_initial}",
+mongodb_logging(event_var=f"Update People Relationships Gsheet Start time in PH: {current_time_ph_initial}",
         old_doc=None,
         new_doc=None)
 
@@ -177,7 +178,6 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 # Load the service account credentials
 # for local testing
 # creds = Credentials.from_service_account_file(os.path.join(working_directory, "credentials.json"), scopes=SCOPES)
-creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds and os.path.exists(creds):
     credentials = Credentials.from_service_account_file(creds, scopes=SCOPES)
 else:
@@ -364,7 +364,7 @@ collection = db['app_people_relationships']
 
 initial_count_of_collection = collection.count_documents({})
 
-def delete_all():
+def delete_all(collection):
     result = collection.delete_many({})
     print(f"Deleted {result.deleted_count} documents from {collection.name}")
 
@@ -375,7 +375,13 @@ def count_of_all_documents():
     # print(f"There are {collection.count_documents({})} documents now in {collection.name}")
     return collection.count_documents({})
 
-delete_all()
+# backup to mongodb
+backup_script_collection_input(backup_type="app people relationships", 
+                               collection_source=collection, 
+                               collection_output=db['app_people_relationships_backups'])
+
+# --------------- delete all of the contents of the db to update
+delete_all(collection=collection)
 
 creds = os.getenv("GOOGLE_CREDENTIALS")
 if creds and os.path.exists(creds):
@@ -416,20 +422,6 @@ df = pd.DataFrame(data[1:], columns=data[0])
 
 backup_file_path = 'people_relationships_backup.csv'
 df.to_csv(backup_file_path, index=False)
-
-# backup to mongodb
-df_backup = df.copy()
-df_backup['date_inserted'] = datetime.now()
-collection_backup = db['app_people_relationships_backups']
-
-df_dict = df_backup.to_dict(orient="records")
-old_record_backup = {
-    "backup_type": "previous people relationships data",
-    "date_inserted": datetime.now(), 
-    "people_relationships": df_dict
-}
-collection_backup.insert_one(old_record_backup)
-
 
 subprocess.run(['git', 'add', backup_file_path])
 subprocess.run(['git', 'commit', '-m', 'Backup people relationships old to CSV'])
@@ -473,15 +465,7 @@ with open(logfile, 'a') as file:
     file.write(f'\nUpdate People Relationships Gsheet Total Running time: {total_running_time}')
 
 
-logging(event_var=f'Total Number of documents: {count_of_all_documents()} in the collection {collection.name}',
-        old_doc=None,
-        new_doc=None)
-logging(event_var=f'Update People Relationships Gsheet End time in USA: {current_time}',
-        old_doc=None,
-        new_doc=None)
-logging(event_var=f'Update People Relationships Gsheet End time in PH: {current_time_ph}',
-        old_doc=None,
-        new_doc=None)
-logging(event_var=f'Update People Relationships Gsheet Total Running time: {total_running_time}',
-        old_doc=None,
-        new_doc=None)
+mongodb_logging(event_var=f'Total Number of documents: {count_of_all_documents()} in the collection {collection.name}', old_doc=None, new_doc=None)
+mongodb_logging(event_var=f'Update People Relationships Gsheet End time in USA: {current_time}', old_doc=None, new_doc=None)
+mongodb_logging(event_var=f'Update People Relationships Gsheet End time in PH: {current_time_ph}', old_doc=None, new_doc=None)
+mongodb_logging(event_var=f'Update People Relationships Gsheet Total Running time: {total_running_time}', old_doc=None, new_doc=None)

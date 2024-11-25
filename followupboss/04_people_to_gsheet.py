@@ -11,6 +11,7 @@ import gspread
 import uuid
 import numpy as np
 import os
+from followupboss.scripts import backup_script_collection_input, mongodb_logging
 
 api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
 X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
@@ -26,6 +27,9 @@ hoover_tz = pytz.timezone('America/Chicago')
 
 current_time_initial = dt.now(hoover_tz)
 current_time_ph_initial = dt.now()
+
+mongodb_logging(event_var=f'People Extract Start time in USA: {current_time_initial}', old_doc=None, new_doc=None)
+mongodb_logging(event_var=f'People Extract Start time in PH: {current_time_ph_initial}', old_doc=None, new_doc=None)
 
 with open(logfile, 'a') as file:
     file.write(f'\nPeople Extract Start time in USA: {current_time_initial}')
@@ -62,6 +66,12 @@ def count_of_all_collections():
 initial_count = count_of_all_collections()
 print(f"There are {initial_count} documents now in {collection.name}")
 
+# backup to mongodb
+backup_script_collection_input(backup_type="followupboss people", 
+                               collection_source=collection, 
+                               collection_output=db['followupboss_people_backup'])
+
+# -------delete all for replacement
 delete_all()
 
 list_of_offsets = list(range(0, round(total, -2) + 1, 100))
