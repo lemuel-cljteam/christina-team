@@ -20,7 +20,7 @@ X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
 creds = os.getenv("GOOGLE_CREDENTIALS")
-MONGO_URI = os.getenv("MONGO_URI")
+mongo_uri = os.getenv("MONGO_URI")
 
 working_directory = os.getcwd()
 # r'c:\\Users\\ENDUSER\\OneDrive\\FOR CHRISTINA\\Python\\ETLs\\followupboss\\logs.txt'
@@ -41,7 +41,7 @@ creds = os.getenv("GOOGLE_CREDENTIALS")
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
 
-client = MongoClient(MONGO_URI)
+client = MongoClient(mongo_uri)
 db = client['Christina']
 collection = db['followupboss_people']
 

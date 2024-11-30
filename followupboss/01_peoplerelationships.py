@@ -14,7 +14,7 @@ X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
 mongopass = os.getenv("MONGODB_PASSWORD")
 gsheetid = os.getenv("GSHEET_ID")
 creds = os.getenv("GOOGLE_CREDENTIALS")
-MONGO_URI = os.getenv("MONGO_URI")
+mongo_uri = os.getenv("MONGO_URI")
 
 working_directory = os.getcwd()
 
@@ -28,12 +28,6 @@ logfile = os.path.join(working_directory, "followupboss", "logs.txt")
 with open(logfile, 'a') as file:
     file.write(f'\nPeople Relationships Extract Start time in USA: {current_time_initial}')
     file.write(f'\nPeople Relationships Extract Start time in PH: {current_time_ph_initial}\n')
-
-api_key = os.getenv("FOLLOWUPBOSS_APIKEY")
-X_System_Key = os.getenv("FOLLOWUPBOSS_XSYSTEMKEY")
-X_System = os.getenv("FOLLOWUPBOSS_XSYSTEM")
-mongopass = os.getenv("MONGODB_PASSWORD")
-gsheetid = os.getenv("GSHEET_ID")
 
 # Encode API key in Base64
 encoded_api_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
@@ -54,7 +48,7 @@ list_of_offsets = list(range(0, round(total, -1) + 1, 100))
 df_list = []
 
 from pymongo import MongoClient
-client = MongoClient(MONGO_URI)
+client = MongoClient(mongo_uri)
 db = client['Christina']
 collection = db['followupboss_people_relationships']
 
